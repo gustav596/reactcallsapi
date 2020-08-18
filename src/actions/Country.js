@@ -1,5 +1,4 @@
 import api from "./api"
-import { ACTION_TYPES } from "../actions/Customer";
 
 export const fetchAllCountries = () => dispatch =>{
     //get api req

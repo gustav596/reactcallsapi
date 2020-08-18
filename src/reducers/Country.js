@@ -1,4 +1,3 @@
-import { ACTION_TYPES } from "../actions/Customer";
 const initialState ={
     list:[]
 }

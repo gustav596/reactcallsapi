@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import * as actions from "../actions/Customer"
-import { Grid, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, withStyles } from "@material-ui/core"
+import { Grid, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, ButtonGroup, Button, withStyles } from "@material-ui/core"
 import CreateCustomer from "./CreateCustomer"
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const styles = theme =>({
     root: {
+        flexGrow: 1,
         "& .MuiTableCell-head":{
             fontSize: "1.25rem"
         }
@@ -22,9 +24,16 @@ const Customers = ({classes, ...props}) => {
         props.fetchAllCustomers()
     },[])
 
+    const onDelete = id => {
+        if (window.confirm('Är du säker att du vill ta bort denna kund?'))
+            props.deleteCustomer(id)
+    }
+
     return (
         <Paper className={classes.paper} elevation={3}>
-            <Grid container>
+            <Grid container direction="row"
+  justify="space-around"
+  alignItems="center">
                 <Grid Grid item xs={2}>
                     <CreateCustomer />
                 </Grid>
@@ -48,6 +57,12 @@ const Customers = ({classes, ...props}) => {
                                     <TableRow key={index}>
                                         <TableCell>{record.name}</TableCell>
                                         <TableCell>{record.country.countryName}</TableCell>
+                                        <TableCell>
+                                            <ButtonGroup variant="text">
+                                                <Button><DeleteIcon color="secondary"
+                                                    onClick={() => onDelete(record.id)} /></Button>
+                                            </ButtonGroup>
+                                        </TableCell>
                                     </TableRow>)
                                     })
                                 }
@@ -64,7 +79,8 @@ const mapStateToProps = state=>({
         customerList:state.customer.list
 })
 const mapActionToProps ={
-    fetchAllCustomers: actions.fetchAll
+    fetchAllCustomers: actions.fetchAll,
+    deleteCustomer: actions.Delete
 }
 
 export default connect(mapStateToProps, mapActionToProps)(withStyles(styles)(Customers));

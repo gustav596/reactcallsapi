@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import { store } from "./actions/store";
 import { Provider } from "react-redux";
-import Customers from './components/Customer';
+import ListOfCustomers from './components/ListOfCustomers';
 import { Container } from "@material-ui/core"
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
       <Container maxWidth="lg">
         
       </Container>
-      <Customers />
+      <ListOfCustomers />
     </Provider>
   );
 }
