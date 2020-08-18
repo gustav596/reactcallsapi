@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import * as actions from "../actions/Customer"
 import { Grid, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, withStyles } from "@material-ui/core"
-import CustomerForm from "./CustomerForm"
+import CreateCustomer from "./CreateCustomer"
 
 const styles = theme =>({
     root: {
@@ -26,7 +26,7 @@ const Customers = ({classes, ...props}) => {
         <Paper className={classes.paper} elevation={3}>
             <Grid container>
                 <Grid Grid item xs={2}>
-                    <CustomerForm />
+                    <CreateCustomer />
                 </Grid>
                 <Grid Grid item xs={10}>
                     <TableContainer>
