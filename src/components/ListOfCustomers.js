@@ -12,6 +12,9 @@ const styles = theme =>({
             fontSize: "1.25rem"
         }
     },
+    createcustomer :{
+        minWidth: 220
+    },
     paper :{
         margin: theme.spacing(4),
         padding: theme.spacing(2)
@@ -32,9 +35,9 @@ const Customers = ({classes, ...props}) => {
     return (
         <Paper className={classes.paper} elevation={3}>
             <Grid container direction="row"
-  justify="space-around"
-  alignItems="center">
-                <Grid Grid item xs={2}>
+                justify="space-around"
+                alignItems="center">
+                <Grid Grid className={classes.createcustomer} item xs={2}>
                     <CreateCustomer />
                 </Grid>
                 <Grid Grid item xs={10}>

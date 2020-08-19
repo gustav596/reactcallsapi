@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 const styles = theme =>({
     root: {
-        minWidth: 220,
+        textAlign: 'center',
         "& .MuiTableCell-head":{
             fontSize: "1.25rem"
         }
@@ -69,7 +69,7 @@ const CreateCustomer = ({classes, ...props}) => {
                             className={classes.smMargin}
                         >
                             Skapa kund
-                        </Button>
+                    </Button>
                 </Grid>
                        
             </Grid>
