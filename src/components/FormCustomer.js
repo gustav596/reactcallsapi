@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import useForm from "./useForm";
 import * as actions from "../actions/Customer"
 import * as actionsCountry from "../actions/Country"
 import { Grid, TextField, withStyles, InputLabel, Select, MenuItem, Button } from "@material-ui/core";
@@ -18,41 +19,71 @@ const styles = theme =>({
         minWidth: 220
     }
 })
-
-const CreateCustomer = ({classes, ...props}) => {
+const initialFieldValues = {
+    Name: '',
+    CountryId: ''
+}
+const FormCustomer = ({classes, ...props}) => {
+    const {
+        values,
+        setValues,
+        handleInputChange
+    } = useForm(initialFieldValues, props.setCurrentId)
+    if (props.currentId != 0){ 
+        if(typeof values.CountryId === 'undefined')
+            values.CountryId = values.country.countryId;
+        if (typeof values.Name === 'undefined') 
+            values.Name = values.name;
+    }
     const inputLabel = React.useRef(null);
-    const [labelWidth, setLabelWidth] = React.useState(0);
-    useEffect(()=>{
-        setLabelWidth(inputLabel.current.offsetWidth);
-        props.fetchAllCountries()
-    },[])
+    const inputRef = React.useRef();
+    const [labelWidth] = React.useState(0);
     const handleSubmit = e => {
         e.preventDefault()
-        var Customer = {
-            Name: document.getElementsByName("Name")[0].value,
+        let Customer = {
+            Name: values.Name,
             Country : { 
-                CountryId : parseInt(document.getElementsByName("CountryName")[0].value), 
-                CountryName : document.getElementById("mui-component-select-CountryName").outerText
+                CountryId : values.CountryId, 
+                CountryName : document.getElementById("mui-component-select-CountryId").outerText
             }
-        };  
-        props.createCustomer(Customer);
+        };
+        if (props.currentId == 0)
+            props.createCustomer(Customer);
+        else
+            props.updateCustomer(props.currentId, Customer)
     }
+    useEffect(() => {
+        props.fetchAllCountries()
+        if (props.currentId != 0) {
+            setTimeout(() => {
+                inputRef.current.focus();
+            }, 100);
+            setValues({
+                ...props.customerList.find(x => x.id == props.currentId)
+            })
+        }
+    }, [props.currentId])
     return(
         <form autoComplete="off" className={classes.root} onSubmit={handleSubmit}> 
             <Grid container>
                 <Grid>
                     <TextField
                         name="Name"
+                        value={values.Name}
                         variant="outlined"
                         label="För och efternamn"
+                        onChange={handleInputChange}
+                        inputRef={inputRef} 
                     />
                     <InputLabel className={classes.smMargin} ref={inputLabel}>Vänligen välj ett land</InputLabel>
                     <Select className={classes.dd}
-                            name="CountryName"
+                            name="CountryId"
+                            value={values.CountryId}
                             label="Välj ett land"
                             labelWidth={labelWidth}
+                            onChange={handleInputChange}
                     >
-                    {
+                    {                   
                         props.countryList.map((record, index)=>{
                             return (
                                 <MenuItem 
@@ -77,10 +108,12 @@ const CreateCustomer = ({classes, ...props}) => {
         )
 }
 const mapStateToProps = state=>({
+    customerList:state.customer.list,
     countryList:state.country.list
 })
 const mapActionToProps ={
     fetchAllCountries: actionsCountry.fetchAllCountries,
-    createCustomer: actions.create
+    createCustomer: actions.create,
+    updateCustomer: actions.update
 }
-export default connect(mapStateToProps, mapActionToProps)(withStyles(styles)(CreateCustomer));
+export default connect(mapStateToProps, mapActionToProps)(withStyles(styles)(FormCustomer));

@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import * as actions from "../actions/Customer"
 import { Grid, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, ButtonGroup, Button, withStyles } from "@material-ui/core"
-import CreateCustomer from "./CreateCustomer"
+import FormCustomer from "./FormCustomer"
+import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 const styles = theme =>({
@@ -12,8 +13,8 @@ const styles = theme =>({
             fontSize: "1.25rem"
         }
     },
-    createcustomer :{
-        minWidth: 220
+    formcustomer :{
+        minWidth: 350
     },
     paper :{
         margin: theme.spacing(4),
@@ -22,7 +23,7 @@ const styles = theme =>({
 })
 
 const Customers = ({classes, ...props}) => {
-
+    const [currentId, setCurrentId] = useState(0);
     useEffect(()=>{
         props.fetchAllCustomers()
     },[])
@@ -37,10 +38,10 @@ const Customers = ({classes, ...props}) => {
             <Grid container direction="row"
                 justify="space-around"
                 alignItems="center">
-                <Grid Grid className={classes.createcustomer} item xs={2}>
-                    <CreateCustomer />
+                <Grid Grid className={classes.formcustomer} item xs={3}>
+                    <FormCustomer {...({ currentId, setCurrentId })} />
                 </Grid>
-                <Grid Grid item xs={10}>
+                <Grid Grid item xs={9}>
                     <TableContainer>
                         <Table>
                             <TableHead className={classes.root}>
@@ -62,6 +63,8 @@ const Customers = ({classes, ...props}) => {
                                         <TableCell>{record.country.countryName}</TableCell>
                                         <TableCell>
                                             <ButtonGroup variant="text">
+                                            <Button><EditIcon color="primary"
+                                                        onClick={() => { setCurrentId(record.id) }} /></Button>
                                                 <Button><DeleteIcon color="secondary"
                                                     onClick={() => onDelete(record.id)} /></Button>
                                             </ButtonGroup>
